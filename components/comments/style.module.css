@@ -1,0 +1,11 @@
+.header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 10px 0px;
+  background-color: #13aa57;
+  color: white;
+}
+.title {
+  color: white !important;
+}

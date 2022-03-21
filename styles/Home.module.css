@@ -1,4 +1,11 @@
-.appBar {
+.floatingBtn {
+  left: 85%;
+  bottom: 10px;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: #13aa57;
   color: white;
+  border-color: #13aa57;
 }
