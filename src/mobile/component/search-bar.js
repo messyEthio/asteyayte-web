@@ -1,7 +1,9 @@
-import {Select, Spin} from "antd";
-import {useState} from 'react'
+import {AutoComplete,Input} from "antd";
+import {useEffect, useState} from 'react'
 const SearchBar = () => {
-    const [options,setOptions] = useState([
+    const [value,setValue] = useState("")
+    const [options,setOptions] = useState([])
+    const dataSource = [
         {
             id:1,
             name:'Commercial bank of Ethiopia',
@@ -16,48 +18,59 @@ const SearchBar = () => {
             id:3,
             name:'Amhara Bank',
             brand_name:'ab'
-        }
-    ])
+        },
+        {
+            id:4,
+            name:'CBE_Kidist maryam',
+            brand_name:'cbe'
+        },
+    ]
 
-    const handleSearch = (searchValue)=>{
-        setOptions(searchValue?searchQuery(searchValue):[])
+    const handleSearch = (searchText)=>{
+        setOptions(
+            !searchText
+                ? []
+                : searchQuery(searchText)
+        );
     }
-    const  onSelect = (value)=>{
+    const  onSelect = (value,options)=>{
+        setValue(value)
         console.log(options)
-        console.log(value)
     }
 
-   const searchQuery =(value)=>{
-     const data= options.filter(item=>item.brand_name?.includes(value.toString()))
-          .map((search,index)=>({
-              value:`${search?.name}${index}`,
-              label:(
-                  <div>
-                      <span>{search?.name}</span>
-                  </div>
-              )
-          }))
-       return data
+    const searchQuery = (searchValue) => {
+        const searchText = searchValue.toLowerCase()
+        return dataSource.filter(data=>data.brand_name.toLowerCase().indexOf(searchText)!==-1||data.name.toLowerCase().indexOf(searchText)!==-1)
+            .map(obj=>{
+                if (obj!==undefined){
+                    return {
+                        value: `${obj.name}`,
+                        label: (
+                            <div>
+                                <span>{obj.name}</span>
+                            </div>
+                        )
+                    };
+                }else {
+                    return []
+                }
+            })
+    }
+
+   const onChange =(data)=>{
+        setValue(data)
    }
   return (
-      <Select
-          showArrow={false}
-          showSearch={true}
-          placeholder="Search companies e.g @company_name"
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-              option.label?.toLowerCase().indexOf(input.toLowerCase()) >=0||
-              option.title?.toLowerCase().indexOf(input.toLowerCase())>=0
-          }
-          options={options.map((_, index) => {
-              return {
-                  key: index,
-                  value: _.id,
-                  label: _.name,
-                  title: _.brand_name,
-              };
-          })}
-      ></Select>
+      <AutoComplete
+        value={value}
+        allowClear={true}
+        options={options}
+        onSelect={onSelect}
+        onSearch={handleSearch}
+        onChange={onChange}
+      >
+          <Input size={'large'} placeholder={'Search companies, Staffs and Users'}/>
+      </AutoComplete>
   );
 };
 
